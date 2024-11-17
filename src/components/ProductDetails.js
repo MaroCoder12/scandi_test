@@ -14,7 +14,8 @@ function ProductDetails() {
 
   const [addToCart] = useMutation(ADD_TO_CART_MUTATION, {
     onCompleted: () => {
-      console.log('Product added to cart!');
+      window.location.reload();
+      alert('Product added to cart!');
     },
     onError: (error) => {
       console.error(error.message);
@@ -35,13 +36,9 @@ function ProductDetails() {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
-  const handleClick = () => {
-    alert('Added To Cart');
-  };
   const productAttributes = attributes
     ? attributes.filter(attribute => attribute.product_id === product.product_id)
     : attributes;
-    console.log(productAttributes);
     
   return (
     <div className="product-page">

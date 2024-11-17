@@ -8,26 +8,18 @@
   box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
   padding: 1rem;
   overflow-y: auto;
+  z-index: 1000;
 }
 
 .cart-popup h2 {
   font-size: 1.5rem;
   margin-bottom: 1rem;
-}
-
-.cart-popup .close-popup-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
-  border: none;
-  font-size: 1.2rem;
-  cursor: pointer;
+  color: grey;
 }
 
 .cart-item {
   display: flex;
-  gap: 1rem;
+  gap: 10px;
   margin-bottom: 1rem;
 }
 
@@ -35,8 +27,65 @@
   width: 50px;
   height: 50px;
   object-fit: cover;
+  border-radius: 5px;
 }
 
-.cart-item p {
-  margin: 0;
+.cart-item-details {
+  flex: 1;
+  color: grey;
+}
+
+.cart-item-controls {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.cart-item-controls button {
+  padding: 5px 10px;
+  border: none;
+  background: grey;
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.cart-item-controls button:hover {
+  background: rgb(183, 179, 179);
+}
+
+.remove-btn {
+  background: red;
+}
+
+.remove-btn:hover {
+  background: darkred;
+}
+
+.place-order-btn {
+  display: block;
+  width: 100%;
+  margin-top: 1rem;
+  padding: 10px;
+  background: grey;
+  color: #fff;
+  text-align: center;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.place-order-btn:hover {
+  background: rgb(183, 179, 179);
+}
+
+.close-popup-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
 }

@@ -1,32 +1,14 @@
 // src/components/ProductList.js
 import React from 'react';
 import Button from './Button.js';
-import { useQuery, useMutation } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { GET_PRODUCTS } from '../graphql/queries';
-import { ADD_TO_CART_MUTATION } from '../graphql/mutations.js'
 import { Link } from 'react-router-dom';
 import '../styles/ProductList.css';
 
 function ProductList({ category_id, category }) {
   const { loading, error, data } = useQuery(GET_PRODUCTS);
-  const [addToCart] = useMutation(ADD_TO_CART_MUTATION, {
-    onCompleted: () => {
-      console.log('Product added to cart!');
-    },
-    onError: (error) => {
-      console.error(error.message);
-    },
-  });
-
-  const handleAddToCart = (id) => {
-    addToCart({
-      variables: {
-        productId: id,
-        quantity: 1,
-      },
-    });
-  };
-
+  
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
   
@@ -51,9 +33,6 @@ function ProductList({ category_id, category }) {
               {product.amount}$
             </div>
             </Link>
-            <div>
-             <Button className='add-to-cart' text="Add To Cart" />
-            </div>
           </div>
         ))}
     </div>

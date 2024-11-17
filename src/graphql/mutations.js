@@ -52,3 +52,32 @@ export const ADD_TO_CART_MUTATION = gql`
     }
   }
 `;
+
+// Mutation to update cart item quantity
+export const UPDATE_CART_MUTATION = gql`
+  mutation UpdateCart($itemId: ID!, $quantityChange: Int!) {
+    updateCart(itemId: $itemId, quantityChange: $quantityChange) {
+      id
+      quantity
+    }
+  }
+`;
+
+// Mutation to remove an item from the cart
+export const REMOVE_FROM_CART_MUTATION = gql`
+  mutation RemoveFromCart($itemId: ID!) {
+    removeFromCart(itemId: $itemId) {
+      id
+    }
+  }
+`;
+
+// Mutation to place an order
+export const PLACE_ORDER_MUTATION = gql`
+  mutation PlaceOrder {
+    placeOrder {
+      success
+      message
+    }
+  }
+`;
