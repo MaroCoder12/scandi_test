@@ -70,6 +70,15 @@ try {
         case 'getCart':
             $response = $resolver->getCart();
             break;
+        case 'UpdateCart':
+            $response = $resolver->updateCart($variables);
+            break;
+        case 'RemoveFromCart':
+            $response = $resolver->removeFromCart($variables);
+            break;
+        case 'PlaceOrder':
+            $response = $resolver->placeOrder();
+            break;
         default:
             $response = ['error' => 'Unknown operation'];
             break;

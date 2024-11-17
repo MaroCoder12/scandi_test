@@ -158,9 +158,11 @@ class GraphQLResolver {
     // Get Cart Resolver
     public function getCart() {
         $stmt = $this->pdo->query("
-            SELECT cart.id as cart_id, products.*, cart.quantity 
+            SELECT cart.id as cart_id, products.*, cart.quantity, image_url, amount
             FROM cart 
-            JOIN products ON cart.product_id = products.product_id
+            JOIN products ON cart.product_id = products.id
+            JOIN product_gallery ON product_gallery.product_id = products.id
+            JOIN prices ON prices.product_id = products.id
         ");
         $cartItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -168,11 +170,73 @@ class GraphQLResolver {
             return [
                 'id' => $item['cart_id'],
                 'product' => [
-                    'id' => $item['product_id'],
+                    'id' => $item['id'],
                     'name' => $item['name'],
+                    'price' => $item['amount'],
+                    'image_url' => $item['image_url']
                 ],
                 'quantity' => $item['quantity']
             ];
         }, $cartItems);
+    }
+
+    public function updateCart($variables) {
+        $itemId = $variables['itemId'];
+        $quantityChange = $variables['quantityChange'];
+        // Update quantity in the cart
+        $stmt = $this->pdo->prepare("
+            UPDATE cart 
+            SET quantity = quantity + :quantityChange
+            WHERE cart.product_id = :id
+        ");
+        $stmt->bindParam(':quantityChange', $quantityChange);
+        $stmt->bindParam(':id', $itemId);
+        $stmt->execute();
+
+        // Fetch updated cart item
+        $stmt = $this->pdo->prepare("
+            SELECT cart.id AS cart_id, products.*, cart.quantity 
+            FROM cart 
+            JOIN products ON cart.product_id = products.id
+        ");
+        $stmt->execute();
+        $item = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$item) {
+            throw new Exception("Cart item not found");
+        }
+
+        return [
+            'id' => $item['cart_id'],
+            'product' => [
+                'id' => $item['id'],
+                'name' => $item['name'],
+            ],
+            'quantity' => $item['quantity']
+        ];
+    }
+
+    // Mutation: Remove Item from Cart
+    public function removeFromCart($variables) {
+        $itemId = $variables['itemId'];
+
+        // Delete item from the cart
+        $stmt = $this->pdo->prepare("DELETE FROM cart WHERE cart.product_id = :id");
+        $stmt->bindParam(':id', $itemId);
+        $stmt->execute();
+
+        return ['id' => $itemId];
+    }
+
+    // Mutation: Place Order
+    public function placeOrder() {
+        // Simulate order placement (this can be extended)
+        $stmt = $this->pdo->query("DELETE FROM cart");
+        $stmt->execute();
+
+        return [
+            'success' => true,
+            'message' => "Order placed successfully!",
+        ];
     }
 }

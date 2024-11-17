@@ -47,4 +47,12 @@ type Mutation {
     createProduct(name: String!, price: Float!, categoryId: ID!): Product
     login(username: String!, password: String!): AuthPayload
     signup(username: String!, email: String!, password: String!): AuthPayload
+    updateCart(itemId: ID!, quantityChange: Int!): CartItem!
+    removeFromCart(itemId: ID!): CartItem!
+    placeOrder: OrderResponse!
+}
+
+type OrderResponse {
+  success: Boolean!
+  message: String!
 }
