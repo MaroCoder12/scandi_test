@@ -42,13 +42,13 @@ function ProductDetails() {
     
   return (
     <div className="product-page">
-      <div className="gallary">
+      <div data-testid='product-gallery' className="gallary">
         <div className="main-image">
           <img className="product-card__image" src={product.image_url} alt={product.name}/>
         </div>
       </div>
       
-      <div className="details">
+      <div data-testid='product-description' className="details">
         <h1 className="product-name">{product.name}</h1>
         <p className="product-brand">{product.brand}</p>
         <div>
@@ -65,7 +65,7 @@ function ProductDetails() {
         <h1>{product.amount}$</h1>
         </div>
         <div>
-           <Button className='add-to-cart' text="Add To Cart" onClick={handleAddToCart} />
+           <Button data-testid='add-to-cart' className='add-to-cart' text="Add To Cart" onClick={handleAddToCart} />
         </div>
       </div>     
     </div>

@@ -70,15 +70,15 @@ function CartPopup({ isOpen, closePopup, cartItems }) {
       ) : (
         <div>
           {cartItems.map((item) => (
-            <div key={item.id} className="cart-item">
+            <div key={item.id} className="cart-item" data-testId="">
               <img src={item.product.image_url} alt={item.product.name} />
               <div className="cart-item-details">
                 <p>{item.product.name}</p>
-                <p>Price: ${item.product.price}</p>
+                <p data-testid='cart-item-amount'>Price: ${item.product.price}</p>
                 <div className="cart-item-controls">
-                  <button onClick={() => handleDecreaseQuantity(item.product.id, item.quantity)}>-</button>
+                  <button data-testid='cart-item-amount-decrease' onClick={() => handleDecreaseQuantity(item.product.id, item.quantity)}>-</button>
                   <span>{item.quantity && item.quantity}</span>
-                  <button onClick={() => handleIncreaseQuantity(item.product.id)}>+</button>
+                  <button data-testid='cart-item-amount-increase' onClick={() => handleIncreaseQuantity(item.product.id)}>+</button>
                   <button onClick={() => handleRemoveProduct(item.product.id)} className="remove-btn">Remove</button>
                 </div>
               </div>

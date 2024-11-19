@@ -23,7 +23,7 @@ function ProductList({ category_id, category }) {
         <h1>{category ? category: "All"}</h1>
       </div>
         {products.map((product) => (
-          <div className='product-card' key={product.id}>
+          <div className='product-card' data-testid={`product-${product.product_id}`} key={product.id}>
            
             <Link className='product-link' to={`/product/${product.product_id}`}>
             <img className="product-card__image" src={product.image_url} />

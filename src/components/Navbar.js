@@ -18,8 +18,8 @@ function Navbar() {
     <nav className="navbar">
       <div className="navbar-left">
         <a href="/">All</a>
-        <a href="/category/clothes">Clothes</a>
-        <a href="/category/tech">Tech</a>
+        <a data-testid='category-link' href="/category/clothes">Clothes</a>
+        <a data-testid='category-link' href="/category/tech">Tech</a>
       </div>
       <div className="navbar-right">
         <a href='/login'><IconComponent type="login"></IconComponent></a>
