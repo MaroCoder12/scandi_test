@@ -34,7 +34,17 @@ class Product extends AbstractProduct {
 
     public function getAllProducts() {
         $stmt = $this->db->query("SELECT * FROM products JOIN product_gallery ON products.id = product_gallery.product_id JOIN prices ON products.id = prices.product_id");
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return array_map(function ($item) {
+            return [
+                'id' => $item['product_id'],
+                'name' => $item['name'],
+                'amount' => $item['amount'],
+                'image_url' => $item['image_url'],
+                'category_id' => $item['category_id']
+            ];
+        }, $products);
+        // return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getProductById($id): mixed {
