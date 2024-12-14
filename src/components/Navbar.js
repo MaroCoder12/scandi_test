@@ -1,32 +1,31 @@
 // src/components/Navbar.js
 import React, { useState } from 'react';
-import { FaShoppingCart } from 'react-icons/fa';
 import CartPopup from './CartPopup';
-import IconComponent from './IconComponent';
 import { useQuery } from '@apollo/client';
 import { GET_CART_QUERY } from '../graphql/queries';
+import { NavLink } from 'react-router-dom';
+import logo from '../assets/img/Group.svg';
+import cart from '../assets/img/Vector.svg';
 import '../styles/NavBar.css';
 
 function Navbar() {
   const [isCartOpen, setIsCartOpen] = useState(false);  
-  const {loading, data } = useQuery(GET_CART_QUERY);  
-
+  const { data } = useQuery(GET_CART_QUERY);
 
   const cartCount = data?.reduce((total, item) => total + item.quantity, 0) || 0;
 
   return (
     <nav className="navbar">
       <div className="navbar-left">
-        <a href="/">All</a>
-        <a data-testid='category-link' href="/category/clothes">Clothes</a>
-        <a data-testid='category-link' href="/category/tech">Tech</a>
+        <NavLink to="/" className={({ isActive }) => (isActive ? 'active' : '')}>All</NavLink>
+        <NavLink data-testid='category-link' to="/category/clothes" className={({ isActive }) => (isActive ? 'active' : '')}>Clothes</NavLink>
+        <NavLink data-testid='category-link' to="/category/tech" className={({ isActive }) => (isActive ? 'active' : '')}>Tech</NavLink>
       </div>
+      <img src={logo} width={30} height={30}/>
       <div className="navbar-right">
-        <a href='/login'><IconComponent type="login"></IconComponent></a>
-        <a href='/signup'><IconComponent type="signup"></IconComponent></a>
-        <div className="cart-icon-container">
-          <FaShoppingCart className="cart-icon" onClick={() => setIsCartOpen(!isCartOpen)} />
-          {loading ? null : (
+        <div className="cart-icon-container" onClick={() => setIsCartOpen(!isCartOpen)}>
+          <img src={cart} width={20} height={20}/>
+          {cartCount === 0 ? null : (
             <span className="cart-count">{cartCount}</span>
           )}
         </div>

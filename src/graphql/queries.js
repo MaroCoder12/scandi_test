@@ -24,8 +24,8 @@ export const GET_PRODUCT_DETAILS = gql`
 `;
 
 export const GET_PRODUCT_ATTRIBUTES = gql`
-  query attributes {
-    attributes {
+  query attributes($id: ID!) {
+    attributes(id: $id) {
       id
       name
       value

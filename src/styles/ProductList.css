@@ -75,7 +75,8 @@
   display: block;
   width: 100%;
   margin-bottom: 50px;
-  color: 218838;
+  color: black;
+  font-family: Raleway;
 }
 
 .price {

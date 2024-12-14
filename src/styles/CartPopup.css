@@ -1,91 +1,168 @@
-.cart-popup {
+/* Combined Styles from CartPopup.css and Modal.css */
+
+/* Modal Background Styles */
+.modalBackground {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.2);
   position: fixed;
-  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
   right: 0;
-  width: 300px;
-  height: 100vh;
-  background: #fff;
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
-  padding: 1rem;
+  top: 70px;
   overflow-y: auto;
-  z-index: 1000;
 }
 
-.cart-popup h2 {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-  color: grey;
+/* Modal Container Styles */
+.modalContainer {
+  width: 360px;
+  height: 538px;
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  display: flex;
+  flex-direction: column;
+  padding: 25px;
+  position: relative;
+  right: -500px;
+  top: -63px;
+}
+
+.modalContainer .title {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 1.8rem;
+  color: #333;
+}
+
+.titleCloseBtn {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.titleCloseBtn button {
+  background-color: transparent;
+  border: none;
+  font-size: 25px;
+  cursor: pointer;
+}
+
+/* Cart Popup Styles */
+.cart-popup {
+  width: 100%;
+  background: #fff;
+  padding: 1.5rem;
+  overflow-y: auto;
 }
 
 .cart-item {
   display: flex;
-  gap: 10px;
-  margin-bottom: 1rem;
+  gap: 15px;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 1rem;
 }
 
 .cart-item img {
-  width: 50px;
-  height: 50px;
+  width: 121px;
+  height: 167px;
   object-fit: cover;
-  border-radius: 5px;
+  float: right;
 }
 
 .cart-item-details {
   flex: 1;
-  color: grey;
+}
+
+.cart-item-details p {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  color: #555;
+}
+
+.color-options {
+  display: flex;
+  gap: 5px;
+}
+
+.color-circle {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: 1px solid #ccc;
 }
 
 .cart-item-controls {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 10px;
+  margin-top: 1rem;
+  width: 80%;
+  right: 50px;
+  height: 130px;
+  position: absolute;
 }
 
 .cart-item-controls button {
-  padding: 5px 10px;
-  border: none;
-  background: grey;
-  color: #fff;
+  padding: 5px 15px;
+  border: 1px solid black;
+  background: transparent;
+  color: black;
   border-radius: 5px;
   cursor: pointer;
+  font-size: large;
 }
 
 .cart-item-controls button:hover {
-  background: rgb(183, 179, 179);
+  background: #000;
+  color: #FFF;
 }
 
-.remove-btn {
-  background: red;
+/* Total Section */
+.total-section {
+  display: flex;
+  justify-content: space-between;
+  font-size: -1rem;
+  font-weight: Raleway;
+  margin-top: 20px;
+  color: #333;
+  border-top: 1px solid #ddd;
+  padding-top: 10px;
 }
 
-.remove-btn:hover {
-  background: darkred;
-}
 
 .place-order-btn {
   display: block;
   width: 100%;
-  margin-top: 1rem;
-  padding: 10px;
-  background: grey;
+  margin-top: 2rem;
+  padding: 12px;
+  background: #28a745;
   color: #fff;
   text-align: center;
   border: none;
   border-radius: 5px;
-  font-size: 1rem;
+  font-size: 1.2rem;
   cursor: pointer;
 }
 
 .place-order-btn:hover {
-  background: rgb(183, 179, 179);
+  background: #218838;
 }
 
-.close-popup-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
+/* Footer Buttons in Modal */
+.modalContainer .footer button {
+  width: 150px;
+  height: 45px;
+  margin: 10px;
   border: none;
-  font-size: 1.5rem;
+  background-color: cornflowerblue;
+  color: white;
+  border-radius: 8px;
+  font-size: 20px;
   cursor: pointer;
+}
+
+#cancelBtn {
+  background-color: crimson;
 }

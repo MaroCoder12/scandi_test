@@ -7,6 +7,9 @@ import '../styles/CartPopup.css';
 function CartPopup({ isOpen, closePopup, cartItems }) {
   const { loading, error } = useQuery(GET_CART_QUERY);
 
+  console.log(cartItems);
+  
+
   // Mutations
   const [updateCart] = useMutation(UPDATE_CART_MUTATION);
   const [removeFromCart] = useMutation(REMOVE_FROM_CART_MUTATION);
@@ -20,6 +23,10 @@ function CartPopup({ isOpen, closePopup, cartItems }) {
 
   // Show error state
   if (error) return <div className="cart-popup">Error loading cart: {error.message}</div>;
+
+  const calculateTotal = () => {
+    return cartItems.reduce((total, item) => total + item.product.price * item.quantity, 0).toFixed(2);
+  };
 
   // Increase Quantity Handler
   const handleIncreaseQuantity = (itemId) => {
@@ -41,14 +48,13 @@ function CartPopup({ isOpen, closePopup, cartItems }) {
     }
   };
 
-  // Remove Product Handler
-  const handleRemoveProduct = (itemId) => {
-    window.location.reload();
-    removeFromCart({
-      variables: { itemId },
-      refetchQueries: [{ query: GET_CART_QUERY }],
-    });
-  };
+  // const handleRemoveProduct = (itemId) => {
+  //   window.location.reload();
+  //   removeFromCart({
+  //     variables: { itemId },
+  //     refetchQueries: [{ query: GET_CART_QUERY }],
+  //   });
+  // };
 
   // Place Order Handler
   const handlePlaceOrder = () => {
@@ -61,34 +67,39 @@ function CartPopup({ isOpen, closePopup, cartItems }) {
   };
 
   return (
-    <div className="cart-popup">
-      <button onClick={closePopup} className="close-popup-btn">X</button>
-      <h2>My Cart</h2>
-
-      {cartItems.length === 0 ? (
-        <p>Your cart is empty.</p>
-      ) : (
-        <div>
-          {cartItems.map((item) => (
-            <div key={item.id} className="cart-item" data-testId="">
-              <img src={item.product.image_url} alt={item.product.name} />
-              <div className="cart-item-details">
-                <p>{item.product.name}</p>
-                <p data-testid='cart-item-amount'>Price: ${item.product.price}</p>
-                <div className="cart-item-controls">
-                  <button data-testid='cart-item-amount-decrease' onClick={() => handleDecreaseQuantity(item.product.id, item.quantity)}>-</button>
-                  <span>{item.quantity && item.quantity}</span>
-                  <button data-testid='cart-item-amount-increase' onClick={() => handleIncreaseQuantity(item.product.id)}>+</button>
-                  <button onClick={() => handleRemoveProduct(item.product.id)} className="remove-btn">Remove</button>
+    <div className="modalBackground">
+      <div className="modalContainer">
+        <h2>My Bag, {cartItems.length} items</h2>
+        {cartItems.length === 0 ? (
+          <p>Your cart is empty.</p>
+        ) : (
+          <div>
+            {cartItems.map((item) => (
+              <div key={item.id} className="cart-item" data-testId="">
+                <div className="cart-item-details">
+                  <p>{item.product.name}</p>
+                  <p data-testid='cart-item-amount'>Price: ${item.product.price}</p>
+                  
+                  <div className="cart-item-controls">
+                    <button data-testid='cart-item-amount-decrease' onClick={() => handleDecreaseQuantity(item.product.id, item.quantity)}>-</button>
+                    <span>{item.quantity && item.quantity}</span>
+                    <button data-testid='cart-item-amount-increase' onClick={() => handleIncreaseQuantity(item.product.id)}>+</button>
+                  </div>
                 </div>
+                <img src={item.product.image_url} alt={item.product.name} />
               </div>
+            ))}
+              {/* Total Section */}
+            <div className="total-section">
+            <p>Total</p>
+            <p>${calculateTotal()}</p>
             </div>
-          ))}
-          <button onClick={handlePlaceOrder} className="place-order-btn">
-            Place Order
-          </button>
-        </div>
-      )}
+            <button onClick={handlePlaceOrder} className="place-order-btn">
+              Place Order
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
