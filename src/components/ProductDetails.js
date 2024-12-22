@@ -15,7 +15,6 @@ function ProductDetails() {
   });
   const [productAttributes, setAttributes] = useState(null);
   const [selectedOption, setOption] = useState(null);
-  console.log(product);
   
   const [addToCart] = useMutation(ADD_TO_CART_MUTATION, {
     onCompleted: () => {
@@ -52,6 +51,7 @@ function ProductDetails() {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
   
+  if (!product) return <p>Product not found</p>;
   
   
   return (
