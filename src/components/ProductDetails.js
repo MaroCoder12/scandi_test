@@ -11,7 +11,7 @@ import parse from "html-react-parser";
 function ProductDetails() {
   const { id } = useParams();
   const { loading, error, data: product } = useQuery(GET_PRODUCT_DETAILS, {
-    variables: { id },
+    variables: { id: id },
   });
   const [productAttributes, setAttributes] = useState(null);
   const [selectedOption, setOption] = useState(null);
