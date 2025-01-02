@@ -11,7 +11,7 @@ function CartPopup({ isOpen, closePopup, cartItems }) {
   
 
   // Mutations
-  const [updateCart] = useMutation(UPDATE_CART_MUTATION);
+  const [updateCartItem] = useMutation(UPDATE_CART_MUTATION);
   const [removeFromCart] = useMutation(REMOVE_FROM_CART_MUTATION);
   const [placeOrder] = useMutation(PLACE_ORDER_MUTATION);
   
@@ -31,7 +31,7 @@ function CartPopup({ isOpen, closePopup, cartItems }) {
   // Increase Quantity Handler
   const handleIncreaseQuantity = (itemId) => {
     window.location.reload();
-    updateCart({
+    updateCartItem({
       variables: { itemId, quantityChange: 1 },
       refetchQueries: [{ query: GET_CART_QUERY }],
     });
@@ -41,20 +41,20 @@ function CartPopup({ isOpen, closePopup, cartItems }) {
   const handleDecreaseQuantity = (itemId, currentQuantity) => {
     if (currentQuantity > 1) {
       window.location.reload();
-      updateCart({
+      updateCartItem({
         variables: { itemId, quantityChange: -1 },
         refetchQueries: [{ query: GET_CART_QUERY }],
       });
     }
   };
 
-  // const handleRemoveProduct = (itemId) => {
-  //   window.location.reload();
-  //   removeFromCart({
-  //     variables: { itemId },
-  //     refetchQueries: [{ query: GET_CART_QUERY }],
-  //   });
-  // };
+  const handleRemoveProduct = (itemId) => {
+    window.location.reload();
+    removeFromCart({
+      variables: { itemId },
+      refetchQueries: [{ query: GET_CART_QUERY }],
+    });
+  };
 
   // Place Order Handler
   const handlePlaceOrder = () => {
@@ -86,7 +86,7 @@ function CartPopup({ isOpen, closePopup, cartItems }) {
                     <button data-testid='cart-item-amount-increase' onClick={() => handleIncreaseQuantity(item.product.id)}>+</button>
                   </div>
                 </div>
-                <img src={item.product.image_url} alt={item.product.name} />
+                <img src={item.product.image} alt={item.product.name} />
               </div>
             ))}
               {/* Total Section */}

@@ -14,7 +14,7 @@ function ProductDetails() {
     variables: { id: id },
   });
   const [productAttributes, setAttributes] = useState(null);
-  const [selectedOption, setOption] = useState(null);
+  const [selectedOptions, setSelectedOptions] = useState(null);
   
   const [addToCart] = useMutation(ADD_TO_CART_MUTATION, {
     onCompleted: () => {
@@ -25,6 +25,13 @@ function ProductDetails() {
       console.error(error.message);
     },
   });
+
+  const handleOptionSelect = (attributeKey, optionValue) => {
+    setSelectedOptions((prev) => ({
+      ...prev,
+      [attributeKey]: optionValue, 
+    }));
+  };
 
   const handleAddToCart = () => {
     addToCart({
@@ -73,11 +80,11 @@ function ProductDetails() {
                 {attribute['value'] && attribute['value'].map(item => ( 
                     <button
                     key={item}
-                    className={`attribute-value-btn ${selectedOption === item ? 'selected' : ''}`}
-                    onClick={() => setOption(item)}
-                    style={{backgroundColor: attribute['key'] == "Color" ? item : ''}}
+                    className={`attribute-value-btn ${selectedOptions && selectedOptions[attribute['key']] === item ? 'selected' : ''}`}
+                    onClick={() =>{if (attribute['key']) handleOptionSelect(attribute['key'], item)}}
+                    style={{backgroundColor: attribute['key'] === "Color" ? item : ''}}
                   >
-                    {attribute['key'] == "Color" ? '' : item}
+                    {attribute['key'] === "Color" ? '' : item}
                   </button>
                 ))
                 }
