@@ -86,7 +86,7 @@ function CartPopup({ isOpen, closePopup, cartItems }) {
                     <button data-testid='cart-item-amount-increase' onClick={() => handleIncreaseQuantity(item.product.id)}>+</button>
                   </div>
                 </div>
-                <img src={item.product.image} alt={item.product.name} />
+                <img src={item.product.image_url} alt={item.product.name} />
               </div>
             ))}
               {/* Total Section */}
