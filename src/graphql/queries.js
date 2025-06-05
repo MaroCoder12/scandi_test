@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export const GET_PRODUCTS = gql`
-  query products { 
+  query products {
     products {
       id
       name
@@ -19,25 +19,30 @@ export const GET_PRODUCT_DETAILS = gql`
       brand
       description
       inStock
+      amount
+      image_url
+      attributes
     }
   }
 `;
 
 export const GET_PRODUCT_ATTRIBUTES = gql`
   query attributes($id: ID!) {
-    attributes(id: $id) {
-      id
-      name
-      value
-    }
+    attributes(id: $id)
   }
 `;
 
 export const GET_CART_QUERY = gql`
-  query getCart {
+  query cart {
     cart {
       id
-      product
+      product {
+        id
+        name
+        price
+        image
+        attributes
+      }
       quantity
     }
   }
