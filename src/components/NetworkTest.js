@@ -17,7 +17,7 @@ function NetworkTest() {
     addResult('Testing direct fetch to GraphQL endpoint...', 'info');
 
     try {
-      const response = await fetch('https://glidel.store/graphql.php', {
+      const response = await fetch('https://glidel.store/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
