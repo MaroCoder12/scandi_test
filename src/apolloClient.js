@@ -27,7 +27,7 @@ const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) 
 });
 
 // HTTP link
-const graphqlEndpoint = process.env.REACT_APP_GRAPHQL_ENDPOINT || 'https://glidel.store/public_html/graphql.php';
+const graphqlEndpoint = process.env.REACT_APP_GRAPHQL_ENDPOINT || 'https://glidel.store/graphql.php';
 console.log('GraphQL Endpoint:', graphqlEndpoint);
 
 const httpLink = createHttpLink({
