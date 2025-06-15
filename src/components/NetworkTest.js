@@ -17,7 +17,7 @@ function NetworkTest() {
     addResult('Testing direct fetch to GraphQL endpoint...', 'info');
 
     try {
-      const response = await fetch('http://localhost:8000', {
+      const response = await fetch('https://glidel.store/graphql.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -41,7 +41,7 @@ function NetworkTest() {
           const firstItemId = data.data.cart[0].id;
           addResult(`Testing remove mutation for item ${firstItemId}...`, 'info');
           
-          const removeResponse = await fetch('http://localhost:8000', {
+          const removeResponse = await fetch('https://glidel.store/graphql.php', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -142,3 +142,4 @@ function NetworkTest() {
 }
 
 export default NetworkTest;
+
