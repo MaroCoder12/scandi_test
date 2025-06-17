@@ -37,6 +37,24 @@ function ProductDetails() {
     errorPolicy: 'all'
   });
 
+  useEffect(() => {
+    if (product && product.attributes) {
+      console.log('Raw attributes:', product.attributes);
+      try {
+        const parsedAttributes = JSON.parse(product.product.attributes);
+        console.log('Parsed attributes:', parsedAttributes);
+        const associativeArray = Object.entries(parsedAttributes).map(([key, value]) => ({ key, value }));
+        console.log('Final attributes array:', associativeArray);
+        setAttributes(associativeArray);
+      } catch (error) {
+        console.error('Error parsing attributes:', error);
+        setAttributes([]);
+      }
+    } else {
+      console.log('No attributes in product data, testing direct GraphQL fetch');
+    }
+  }, [product, id]);
+
   const handleOptionSelect = (attributeKey, optionValue) => {
     setSelectedOptions((prev) => ({
       ...prev,
