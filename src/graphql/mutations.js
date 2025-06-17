@@ -45,8 +45,8 @@ export const ADD_TO_CART_MUTATION = gql`
       product {
         id
         name
-        price
-        image
+        amount  // This might need to be 'amount' instead
+        image_url  // This might need to be 'image_url' instead
       }
       quantity
     }
