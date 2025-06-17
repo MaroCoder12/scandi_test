@@ -174,3 +174,9 @@
   line-height: 1.5;
   color: #666;
 }
+
+.product-price {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+

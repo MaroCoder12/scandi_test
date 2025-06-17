@@ -169,7 +169,7 @@ function ProductDetails() {
             )}
           </div>
         <div className="price">
-        <h1>{product.amount}$</h1>
+        <p className="product-price">{product.amount}$</p>
         </div>
         <div>
            <Button data-testid='add-to-cart' className='add-to-cart' text="Add To Cart" onClick={handleAddToCart} />
