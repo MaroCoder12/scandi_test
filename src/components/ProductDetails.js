@@ -65,7 +65,7 @@ function ProductDetails() {
   if (error) return <p>Error: {error.message}</p>;
 
   if (!product.product) return <p>Product not found</p>;
-
+  console.log(product)
 
   return (
     <div className="product-page">
