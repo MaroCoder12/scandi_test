@@ -5,7 +5,7 @@ export const ADD_TO_CART = gql`
     addToCart(productId: $productId, quantity: $quantity) {
       id
       name
-      price
+      amount
       quantity
     }
   }
@@ -45,8 +45,8 @@ export const ADD_TO_CART_MUTATION = gql`
       product {
         id
         name
-        amount  // This might need to be 'amount' instead
-        image_url  // This might need to be 'image_url' instead
+        amount 
+        image_url 
       }
       quantity
     }
