@@ -2,11 +2,12 @@ import { gql } from '@apollo/client';
 
 export const GET_PRODUCTS = gql`
   query products {
-    products {
+    {
       id
       name
-      price
+      amount
       inStock
+      image_url
     }
   }
 `;
