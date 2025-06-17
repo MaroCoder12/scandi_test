@@ -68,7 +68,7 @@ function ProductDetails() {
   };
 
   const handleAddToCart = () => {
-    const productId = product?.product?.id || id;
+    const productId = product?.product?.id;
     console.log('Using product ID:', productId);
 
     addToCart({
