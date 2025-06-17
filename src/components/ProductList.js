@@ -13,8 +13,8 @@ function ProductList({ category_id, category }) {
   if (error) return <p>Error: {error.message}</p>;
 
   const products = category
-    ? data.filter(product => product.category_id === category_id)
-    : data;
+    ? data.products.filter(product => product.category_id === category_id)
+    : data.products;
 
   // Helper function to convert product name to kebab case
   const toKebabCase = (str) => {
