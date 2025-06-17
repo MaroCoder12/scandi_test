@@ -50,11 +50,6 @@ function ProductDetails() {
   };
 
   const handleAddToCart = () => {
-    console.log('=== ADD TO CART DEBUG ===');
-    console.log('Product data:', product);
-    console.log('Product ID:', product?.product?.id);
-    console.log('URL ID:', id);
-
     const productId = product?.product?.id || id;
     console.log('Using product ID:', productId);
 
@@ -66,84 +61,23 @@ function ProductDetails() {
     });
   };
 
-  useEffect(() => {
-    console.log('=== PRODUCT DATA ===', product);
-
-    if (product && product.attributes) {
-      console.log('Raw attributes:', product.attributes);
-      try {
-        const parsedAttributes = JSON.parse(product.attributes);
-        console.log('Parsed attributes:', parsedAttributes);
-        const associativeArray = Object.entries(parsedAttributes).map(([key, value]) => ({ key, value }));
-        console.log('Final attributes array:', associativeArray);
-        setAttributes(associativeArray);
-      } catch (error) {
-        console.error('Error parsing attributes:', error);
-        setAttributes([]);
-      }
-    } else {
-      console.log('No attributes in product data, testing direct GraphQL fetch');
-
-      // Test direct GraphQL fetch
-      if (product && id) {
-        const testGraphQL = async () => {
-          try {
-            const response = await fetch('http://localhost:8000/graphql.php', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                query: `{ product(id: "${id}") { id name attributes } }`
-              })
-            });
-
-            const result = await response.json();
-            console.log('Direct GraphQL test result:', result);
-
-            if (result.data && result.data.product && result.data.product.attributes) {
-              const parsedAttributes = JSON.parse(result.data.product.attributes);
-              const associativeArray = Object.entries(parsedAttributes).map(([key, value]) => ({ key, value }));
-              console.log('Setting attributes from direct fetch:', associativeArray);
-              setAttributes(associativeArray);
-            } else {
-              console.log('Setting hardcoded attributes as fallback');
-              setAttributes([
-                { key: 'Color', value: ['#FF0000', '#00FF00', '#0000FF', '#000000', '#FFFFFF'] },
-                { key: 'Capacity', value: ['512G', '1T'] }
-              ]);
-            }
-          } catch (error) {
-            console.error('Direct GraphQL test failed:', error);
-            setAttributes([
-              { key: 'Color', value: ['#FF0000', '#00FF00', '#0000FF', '#000000', '#FFFFFF'] },
-              { key: 'Capacity', value: ['512G', '1T'] }
-            ]);
-          }
-        };
-
-        testGraphQL();
-      }
-    }
-  }, [product, id]);
-
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
-  if (!product) return <p>Product not found</p>;
+  if (!product.product) return <p>Product not found</p>;
 
 
   return (
     <div className="product-page">
       <div data-testid='product-gallery' className="gallary">
         <div className="main-image">
-          <img className="product-card__image" src={product.image_url} alt={product.name}/>
+          <img className="product-card__image" src={product.product.image_url} alt={product.product.name}/>
         </div>
       </div>
 
       <div data-testid='product-description' className="details">
-        <h1 className="product-name">{product.name}</h1>
-        <p className="product-brand">{product.brand}</p>
+        <h1 className="product-name">{product.product.product.name}</h1>
+        <p className="product-brand">{product.product.product.brand}</p>
         <div>
             {productAttributes && productAttributes.length > 0 ? (
               productAttributes.map((attribute) => (
@@ -169,12 +103,12 @@ function ProductDetails() {
             )}
           </div>
         <div className="price">
-        <p className="product-price">{product.amount}$</p>
+        <p className="product-price">{product.product.product.amount}$</p>
         </div>
         <div>
            <Button data-testid='add-to-cart' className='add-to-cart' text="Add To Cart" onClick={handleAddToCart} />
             <div className="description">
-              {product.description ? parse(product.description) : <p>No description available</p>}
+              {product.product.product.description ? parse(product.product.product.description) : <p>No description available</p>}
             </div>
         </div>
       </div>
