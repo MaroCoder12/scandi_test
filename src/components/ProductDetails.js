@@ -65,7 +65,6 @@ function ProductDetails() {
   if (error) return <p>Error: {error.message}</p>;
 
   if (!product.product) return <p>Product not found</p>;
-  console.log(product)
 
   return (
     <div className="product-page">
@@ -76,8 +75,8 @@ function ProductDetails() {
       </div>
 
       <div data-testid='product-description' className="details">
-        <h1 className="product-name">{product.product.product.name}</h1>
-        <p className="product-brand">{product.product.product.brand}</p>
+        <h1 className="product-name">{product.product.name}</h1>
+        <p className="product-brand">{product.product.brand}</p>
         <div>
             {productAttributes && productAttributes.length > 0 ? (
               productAttributes.map((attribute) => (
@@ -103,12 +102,12 @@ function ProductDetails() {
             )}
           </div>
         <div className="price">
-        <p className="product-price">{product.product.product.amount}$</p>
+        <p className="product-price">{product.product.amount}$</p>
         </div>
         <div>
            <Button data-testid='add-to-cart' className='add-to-cart' text="Add To Cart" onClick={handleAddToCart} />
             <div className="description">
-              {product.product.product.description ? parse(product.product.product.description) : <p>No description available</p>}
+              {product.product.description ? parse(product.product.description) : <p>No description available</p>}
             </div>
         </div>
       </div>
