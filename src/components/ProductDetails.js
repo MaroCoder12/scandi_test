@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from './Button.js';
 import { useQuery, useMutation } from '@apollo/client';
 import { GET_PRODUCT_DETAILS } from '../graphql/queries';
@@ -173,9 +173,9 @@ function ProductDetails() {
         </div>
         <div>
            <Button data-testid='add-to-cart' className='add-to-cart' text="Add To Cart" onClick={handleAddToCart} />
-           <div className="description">
-           {parse(product.description)}
-           </div>
+            <div className="description">
+              {product.description ? parse(product.description) : <p>No description available</p>}
+            </div>
         </div>
       </div>
     </div>
