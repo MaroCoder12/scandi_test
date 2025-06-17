@@ -38,7 +38,7 @@ function ProductDetails() {
   });
 
   useEffect(() => {
-    if (product && product.attributes) {
+    if (product && product.product.attributes) {
       console.log('Raw attributes:', product.attributes);
       try {
         const parsedAttributes = JSON.parse(product.product.attributes);
