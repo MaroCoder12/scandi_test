@@ -8,6 +8,7 @@ export const GET_PRODUCTS = gql`
       amount
       inStock
       image_url
+      category_id
     }
   }
 `;
