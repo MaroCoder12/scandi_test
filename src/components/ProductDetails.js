@@ -110,7 +110,14 @@ function ProductDetails() {
 
   const handleAddToCart = () => {
     const productId = product?.product?.id;
-    console.log('Using product ID:', productId);
+    
+    if (!productId) {
+      console.error('Product ID is undefined or null');
+      alert('Cannot add to cart: Product ID is missing');
+      return;
+    }
+    
+    console.log('Adding product to cart with ID:', productId);
 
     addToCart({
       variables: {
