@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { useQuery, useMutation, useApolloClient } from '@apollo/client';
+import { useState } from 'react';
+import { useQuery, useMutation } from '@apollo/client';
 import { GET_CART_QUERY } from '../graphql/queries';
-import { UPDATE_CART_MUTATION, REMOVE_FROM_CART_MUTATION, PLACE_ORDER_MUTATION } from '../graphql/mutations';
+import { UPDATE_CART_MUTATION } from '../graphql/mutations';
 import '../styles/CartPopup.css';
 
 function CartPopup({ isOpen, closePopup, cartItems }) {
@@ -9,7 +9,6 @@ function CartPopup({ isOpen, closePopup, cartItems }) {
     fetchPolicy: 'cache-and-network',
     notifyOnNetworkStatusChange: true
   });
-  const client = useApolloClient();
 
   // State for managing selected options for each cart item
   const [selectedOptions, setSelectedOptions] = useState({});
@@ -29,22 +28,8 @@ function CartPopup({ isOpen, closePopup, cartItems }) {
     },
     errorPolicy: 'all'
   });
-  const [removeFromCart] = useMutation(REMOVE_FROM_CART_MUTATION, {
-    onError: (error) => {
-      console.error('Remove from cart error:', error);
-      console.error('GraphQL errors:', error.graphQLErrors);
-      console.error('Network error:', error.networkError);
-    },
-    errorPolicy: 'all'
-  });
-  const [placeOrder] = useMutation(PLACE_ORDER_MUTATION, {
-    onError: (error) => {
-      console.error('Place order error:', error);
-      console.error('GraphQL errors:', error.graphQLErrors);
-      console.error('Network error:', error.networkError);
-    },
-    errorPolicy: 'all'
-  });
+
+
 
   // Prevent rendering if the popup is closed
   if (!isOpen) return null;
@@ -180,71 +165,7 @@ function CartPopup({ isOpen, closePopup, cartItems }) {
     }
   };
 
-  const handleRemoveProduct = (itemId) => {
-    console.log('=== REMOVE ITEM DEBUG ===');
-    console.log('Attempting to remove item with ID:', itemId);
-    console.log('Item ID type:', typeof itemId);
-    console.log('Current cart items:', actualCartItems);
 
-    // Convert itemId to string to ensure consistency
-    const itemIdString = String(itemId);
-    console.log('Using itemId as string:', itemIdString);
-
-    removeFromCart({
-      variables: { itemId: itemIdString },
-      refetchQueries: [{ query: GET_CART_QUERY }],
-      awaitRefetchQueries: true,
-      optimisticResponse: {
-        removeFromCart: {
-          __typename: 'Cart',
-          id: itemIdString,
-          product: {
-            __typename: 'Product',
-            id: '',
-            name: '',
-            price: 0,
-            image: ''
-          },
-          quantity: 0
-        }
-      },
-      update: (cache, { data }) => {
-        console.log('Cache update called with data:', data);
-        try {
-          // Update the cache to remove the item immediately
-          const existingCart = cache.readQuery({ query: GET_CART_QUERY });
-          console.log('Existing cart from cache:', existingCart);
-
-          if (existingCart && existingCart.cart) {
-            const updatedCart = existingCart.cart.filter(item => String(item.id) !== itemIdString);
-            console.log('Updated cart after filter:', updatedCart);
-
-            cache.writeQuery({
-              query: GET_CART_QUERY,
-              data: { cart: updatedCart }
-            });
-            console.log('Cache updated successfully');
-          }
-        } catch (cacheError) {
-          console.error('Cache update error:', cacheError);
-        }
-      }
-    })
-    .then((result) => {
-      console.log('=== REMOVE SUCCESS ===');
-      console.log('Item removed successfully:', result);
-      console.log('Mutation result data:', result.data);
-    })
-    .catch((error) => {
-      console.error('=== REMOVE ERROR ===');
-      console.error('Error removing item:', error);
-      console.error('Error message:', error.message);
-      console.error('GraphQL errors:', error.graphQLErrors);
-      console.error('Network error:', error.networkError);
-      console.error('Error stack:', error.stack);
-      alert('Failed to remove item from cart. Please try again.');
-    });
-  };
 
   // Place Order Handler using dedicated endpoint
   const handlePlaceOrder = async () => {
@@ -254,7 +175,7 @@ function CartPopup({ isOpen, closePopup, cartItems }) {
     try {
       // Use dedicated place order endpoint
       console.log('Calling dedicated place order endpoint...');
-      const response = await fetch('http://localhost:8000/place_order_endpoint.php', {
+      const response = await fetch('https://glidel.store/place_order_endpoint.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

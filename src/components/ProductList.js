@@ -1,6 +1,5 @@
 // src/components/ProductList.js
 import React from 'react';
-import Button from './Button.js';
 import { useQuery } from '@apollo/client';
 import { GET_PRODUCTS } from '../graphql/queries';
 import { Link } from 'react-router-dom';
@@ -31,7 +30,7 @@ function ProductList({ category_id, category }) {
           <div className='product-card' data-testid={`product-${toKebabCase(product.name)}`} key={product.id}>
 
             <Link className='product-link' to={`/product/${product.id}`}>
-            <img className="product-card__image" src={product.image_url} />
+            <img className="product-card__image" src={product.image_url} alt={product.name} />
             <p className="product-card__brand">{product.brand}</p>
             {product.name}
             <div className="price">
