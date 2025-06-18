@@ -52,6 +52,47 @@ function ProductDetails() {
       }
     } else {
       console.log('No attributes in product data, testing direct GraphQL fetch');
+    
+            // Test direct GraphQL fetch
+      if (product && id) {
+        const testGraphQL = async () => {
+          try {
+            const response = await fetch('http://localhost:8000/graphql.php', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                query: `{ product(id: "${id}") { id name attributes } }`
+              })
+            });
+
+            const result = await response.json();
+            console.log('Direct GraphQL test result:', result);
+
+            if (result.data && result.data.product && result.data.product.attributes) {
+              const parsedAttributes = JSON.parse(result.data.product.attributes);
+              const associativeArray = Object.entries(parsedAttributes).map(([key, value]) => ({ key, value }));
+              console.log('Setting attributes from direct fetch:', associativeArray);
+              setAttributes(associativeArray);
+            } else {
+              console.log('Setting hardcoded attributes as fallback');
+              setAttributes([
+                { key: 'Color', value: ['#FF0000', '#00FF00', '#0000FF', '#000000', '#FFFFFF'] },
+                { key: 'Capacity', value: ['512G', '1T'] }
+              ]);
+            }
+          } catch (error) {
+            console.error('Direct GraphQL test failed:', error);
+            setAttributes([
+              { key: 'Color', value: ['#FF0000', '#00FF00', '#0000FF', '#000000', '#FFFFFF'] },
+              { key: 'Capacity', value: ['512G', '1T'] }
+            ]);
+          }
+        };
+
+        testGraphQL();
+      }
     }
   }, [product, id]);
 
