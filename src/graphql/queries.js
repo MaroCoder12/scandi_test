@@ -41,8 +41,8 @@ export const GET_CART_QUERY = gql`
       product {
         id
         name
-        price
-        image
+        amount
+        image_url
         attributes
       }
       quantity
