@@ -1,5 +1,5 @@
 // src/components/Navbar.js
-import React, { useState } from 'react';
+import { useState } from 'react';
 import CartPopup from './CartPopup';
 import { useQuery } from '@apollo/client';
 import { GET_CART_QUERY } from '../graphql/queries';

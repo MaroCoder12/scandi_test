@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import { GET_CART_QUERY } from '../graphql/queries';
 import { UPDATE_CART_MUTATION } from '../graphql/mutations';
+import { useToast } from '../contexts/ToastContext';
 import '../styles/CartPopup.css';
 
 function CartPopup({ isOpen, closePopup, cartItems }) {
@@ -11,20 +12,16 @@ function CartPopup({ isOpen, closePopup, cartItems }) {
   });
 
   // State for managing selected options for each cart item
-  const [selectedOptions, setSelectedOptions] = useState({});
+  const [selectedOptions] = useState({});
+  const { showSuccess, showError } = useToast();
 
-  console.log('CartPopup props cartItems:', cartItems);
-  console.log('CartPopup query data:', data);
-  console.log('CartPopup query loading:', loading);
-  console.log('CartPopup query error:', error);
+
 
 
   // Mutations
   const [updateCartItem] = useMutation(UPDATE_CART_MUTATION, {
     onError: (error) => {
       console.error('Update cart error:', error);
-      console.error('GraphQL errors:', error.graphQLErrors);
-      console.error('Network error:', error.networkError);
     },
     errorPolicy: 'all'
   });
@@ -58,27 +55,8 @@ function CartPopup({ isOpen, closePopup, cartItems }) {
     return str.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
   };
 
-  // Handle size selection
-  const handleSizeSelect = (itemId, size) => {
-    setSelectedOptions(prev => ({
-      ...prev,
-      [itemId]: {
-        ...prev[itemId],
-        size: size
-      }
-    }));
-  };
-
-  // Handle color selection
-  const handleColorSelect = (itemId, color) => {
-    setSelectedOptions(prev => ({
-      ...prev,
-      [itemId]: {
-        ...prev[itemId],
-        color: color
-      }
-    }));
-  };
+  // Note: Size and color selection are non-functional in cart as per requirements
+  // Attributes are display-only
 
   // Get selected options for an item with defaults
   const getSelectedOptions = (itemId, productAttributes) => {
@@ -102,7 +80,6 @@ function CartPopup({ isOpen, closePopup, cartItems }) {
       if (!attributesString) return {};
       return JSON.parse(attributesString);
     } catch (error) {
-      console.error('Error parsing product attributes:', error);
       return {};
     }
   };
@@ -119,28 +96,19 @@ function CartPopup({ isOpen, closePopup, cartItems }) {
       variables: { itemId, quantityChange: 1 },
       refetchQueries: [{ query: GET_CART_QUERY }],
     })
-    .then(() => {
-      console.log('Quantity increased successfully');
-    })
     .catch((error) => {
       console.error('Error increasing quantity:', error);
-      alert('Failed to update quantity. Please try again.');
+      showError('Failed to update quantity. Please try again.');
     });
   };
 
   // Decrease Quantity Handler - now removes item when quantity reaches 0
   const handleDecreaseQuantity = (itemId, currentQuantity) => {
-    console.log('=== DECREASE QUANTITY DEBUG ===');
-    console.log('Item ID:', itemId, 'Current Quantity:', currentQuantity);
-
     if (currentQuantity > 1) {
       // Decrease quantity by 1
       updateCartItem({
         variables: { itemId, quantityChange: -1 },
         refetchQueries: [{ query: GET_CART_QUERY }],
-      })
-      .then(() => {
-        console.log('Quantity decreased successfully');
       })
       .catch((error) => {
         console.error('Error decreasing quantity:', error);
@@ -148,15 +116,10 @@ function CartPopup({ isOpen, closePopup, cartItems }) {
       });
     } else {
       // When quantity is 1, decrease it to 0 which should remove the item
-      // Use the same updateCart mutation but with -1 to make it 0
-      console.log('Quantity is 1, decreasing to 0 (should remove item)...');
       updateCartItem({
         variables: { itemId, quantityChange: -1 },
         refetchQueries: [{ query: GET_CART_QUERY }],
         awaitRefetchQueries: true
-      })
-      .then((result) => {
-        console.log('Item quantity set to 0 (removed):', result);
       })
       .catch((error) => {
         console.error('Error removing item via quantity decrease:', error);
@@ -169,13 +132,9 @@ function CartPopup({ isOpen, closePopup, cartItems }) {
 
   // Place Order Handler using dedicated endpoint
   const handlePlaceOrder = async () => {
-    console.log('=== PLACE ORDER DEBUG ===');
-    console.log('Current cart items before order:', actualCartItems);
-
     try {
-      // Use dedicated place order endpoint
-      console.log('Calling dedicated place order endpoint...');
-      const response = await fetch('https://glidel.store/place_order_endpoint.php', {
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000';
+      const response = await fetch(`${backendUrl}/place_order_endpoint.php`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -193,31 +152,25 @@ function CartPopup({ isOpen, closePopup, cartItems }) {
       });
 
       const result = await response.json();
-      console.log('=== PLACE ORDER SUCCESS ===');
-      console.log('Order result:', result);
 
       if (result.data?.placeOrder?.success) {
-        // Manually refetch the cart data
-        console.log('Manually refetching cart data...');
+        // Refetch the cart data to update UI
         await refetch();
-        console.log('Cart refetch completed');
-
-        alert('Order placed successfully!');
+        showSuccess('Order placed successfully!');
         closePopup(); // Close the cart popup
       } else {
         throw new Error(result.data?.placeOrder?.message || 'Order failed');
       }
 
     } catch (err) {
-      console.error('=== PLACE ORDER ERROR ===');
       console.error('Place order error:', err);
-      alert(`Failed to place order: ${err.message}`);
+      showError(`Failed to place order: ${err.message}`);
     }
   };
 
   return (
-    <div className="modalBackground">
-      <div className="modalContainer">
+    <div className="modalBackground" onClick={closePopup}>
+      <div className="modalContainer" onClick={(e) => e.stopPropagation()}>
         <div className="cart-header">
           <h2>My Bag, {getTotalItemCount()} items</h2>
           <button className="close-btn" onClick={closePopup}>×</button>
@@ -229,7 +182,6 @@ function CartPopup({ isOpen, closePopup, cartItems }) {
             <div className="cart-items-container">
               {actualCartItems?.map((item, index) => {
                 const itemOptions = getSelectedOptions(item.id, item.product.attributes);
-                const productAttributes = parseProductAttributes(item.product.attributes);
 
                 // Get available sizes and colors from product attributes
                 const availableSizes = getAttributeOptions(item.product.attributes, 'Size') ||
@@ -239,9 +191,7 @@ function CartPopup({ isOpen, closePopup, cartItems }) {
                                        getAttributeOptions(item.product.attributes, 'color') ||
                                        ['#C4D79B', '#2B5D31', '#0F4C3A']; // fallback
 
-                console.log('Product attributes for', item.product.name, ':', productAttributes);
-                console.log('Available sizes:', availableSizes);
-                console.log('Available colors:', availableColors);
+
 
                 return (
                   <div key={item.id} className="cart-item">
@@ -254,14 +204,13 @@ function CartPopup({ isOpen, closePopup, cartItems }) {
                           <span className="size-label">Size:</span>
                           <div className="size-options">
                             {availableSizes.map(size => (
-                              <button
+                              <span
                                 key={size}
-                                className={`size-btn ${itemOptions.size === size ? 'selected' : ''}`}
-                                onClick={() => handleSizeSelect(item.id, size)}
+                                className={`size-btn ${itemOptions.size === size ? 'selected' : ''} non-clickable`}
                                 data-testid={`cart-item-attribute-${toKebabCase('Size')}-${toKebabCase(size)}${itemOptions.size === size ? '-selected' : ''}`}
                               >
                                 {size}
-                              </button>
+                              </span>
                             ))}
                           </div>
                         </div>
@@ -274,9 +223,8 @@ function CartPopup({ isOpen, closePopup, cartItems }) {
                             {availableColors.map(color => (
                               <div
                                 key={color}
-                                className={`color-circle ${itemOptions.color === color ? 'selected' : ''}`}
+                                className={`color-circle ${itemOptions.color === color ? 'selected' : ''} non-clickable`}
                                 style={{backgroundColor: color}}
-                                onClick={() => handleColorSelect(item.id, color)}
                                 data-testid={`cart-item-attribute-${toKebabCase('Color')}-${toKebabCase(color)}${itemOptions.color === color ? '-selected' : ''}`}
                               ></div>
                             ))}
@@ -286,29 +234,29 @@ function CartPopup({ isOpen, closePopup, cartItems }) {
                     </div>
 
                   <div className="cart-item-right">
-                    <div className="cart-item-image">
-                      <img src={item.product.image} alt={item.product.name} />
-                    </div>
-                    <div className="quantity-section">
+                    <div className="image-quantity-container">
                       <div className="cart-item-controls">
                         <button
-                          className="quantity-btn"
-                          data-testid='cart-item-amount-decrease'
-                          onClick={() => handleDecreaseQuantity(item.id, item.quantity)}
-                        >
-                          -
-                        </button>
-                        <span className="quantity-display">{item.quantity}</span>
-                        <button
-                          className="quantity-btn"
+                          className="quantity-btn quantity-btn-increase"
                           data-testid='cart-item-amount-increase'
                           onClick={() => handleIncreaseQuantity(item.id)}
                         >
                           +
                         </button>
+                        <span className="quantity-display">{item.quantity}</span>
+                        <button
+                          className="quantity-btn quantity-btn-decrease"
+                          data-testid='cart-item-amount-decrease'
+                          onClick={() => handleDecreaseQuantity(item.id, item.quantity)}
+                        >
+                          –
+                        </button>
                       </div>
-                      <div className="item-number">{index + 1}</div>
+                      <div className="cart-item-image">
+                        <img src={item.product.image} alt={item.product.name} />
+                      </div>
                     </div>
+                    <div className="item-number">{index + 1}</div>
                   </div>
                 </div>
                 );

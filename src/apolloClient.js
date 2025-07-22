@@ -2,13 +2,8 @@ import { ApolloClient, InMemoryCache, from, createHttpLink } from '@apollo/clien
 import { onError } from '@apollo/client/link/error';
 
 // Error handling link
-const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) => {
-  console.log('Apollo Client Error Handler triggered');
-  console.log('Operation:', operation.operationName);
-  console.log('Variables:', operation.variables);
-
+const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
-    console.error('GraphQL Errors:', graphQLErrors);
     graphQLErrors.forEach(({ message, locations, path }) =>
       console.error(
         `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
@@ -16,19 +11,12 @@ const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) 
     );
   }
   if (networkError) {
-    console.error(`[Network error]:`, networkError);
-    console.error('Network error details:', {
-      name: networkError.name,
-      message: networkError.message,
-      statusCode: networkError.statusCode,
-      result: networkError.result
-    });
+    console.error(`[Network error]: ${networkError}`);
   }
 });
 
 // HTTP link
-const graphqlEndpoint = process.env.REACT_APP_GRAPHQL_ENDPOINT || 'https://glidel.store/graphql.php';
-console.log('GraphQL Endpoint:', graphqlEndpoint);
+const graphqlEndpoint = process.env.REACT_APP_GRAPHQL_ENDPOINT || 'http://localhost:8000/graphql.php';
 
 const httpLink = createHttpLink({
   uri: graphqlEndpoint,
@@ -43,8 +31,7 @@ const client = new ApolloClient({
           cart: {
             merge: false, // Don't merge, replace the entire array
             // Always fetch from network after mutations
-            read(existing, { canRead }) {
-              console.log('Cart cache read - existing:', existing);
+            read(existing) {
               return existing;
             }
           },

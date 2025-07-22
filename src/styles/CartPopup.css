@@ -23,10 +23,10 @@
   box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 25px;
   display: flex;
   flex-direction: column;
-  padding: 44px;
-  position: relative;
-  right: -500px;
-  top: -63px;
+  padding: 15px;
+  position: fixed;
+  right: 33px;
+  top: 70px;
   border-radius: 0;
   overflow-y: auto;
   min-height: 500px; /* Ensure consistent minimum height */
@@ -122,6 +122,12 @@
   gap: 15px;
 }
 
+.image-quantity-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .cart-item-image {
   flex-shrink: 0;
 }
@@ -194,6 +200,15 @@
   color: #fff;
 }
 
+.size-btn.non-clickable {
+  cursor: default;
+  pointer-events: none;
+}
+
+.size-btn.non-clickable:hover {
+  background: inherit;
+}
+
 /* Color Section */
 .color-section {
   display: flex;
@@ -232,6 +247,15 @@
   box-shadow: 0 0 0 2px #fff, 0 0 0 4px #1d1f22;
 }
 
+.color-circle.non-clickable {
+  cursor: default;
+  pointer-events: none;
+}
+
+.color-circle.non-clickable:hover {
+  transform: none;
+}
+
 /* Quantity Section */
 .quantity-section {
   display: flex;
@@ -242,25 +266,29 @@
 
 .cart-item-controls {
   display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 0;
-  border: 1px solid #1d1f22;
+  border: none;
 }
 
 .quantity-btn {
-  width: 32px;
-  height: 32px;
-  border: none;
+  width: 1.75rem; /* w-7 equivalent */
+  height: 1.75rem; /* h-7 equivalent */
+  border: 1px solid #000;
   background: #fff;
-  color: #1d1f22;
+  color: #000;
   cursor: pointer;
-  font-size: 18px;
-  font-weight: 300;
+  font-size: 1.125rem; /* text-lg equivalent */
+  font-weight: 600; /* font-semibold equivalent */
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
   font-family: 'Raleway', sans-serif;
+  border-radius: 0.125rem; /* rounded-sm equivalent */
+  box-shadow: none;
+  margin: 17px;
 }
 
 .quantity-btn:hover {
@@ -272,8 +300,8 @@
 }
 
 .quantity-display {
-  min-width: 32px;
-  height: 32px;
+  min-width: 1.75rem; /* w-7 equivalent */
+  height: 1.75rem; /* h-7 equivalent */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -281,9 +309,9 @@
   font-weight: 500;
   color: #1d1f22;
   background: #fff;
-  border-left: 1px solid #1d1f22;
-  border-right: 1px solid #1d1f22;
+  border: none;
   font-family: 'Raleway', sans-serif;
+  font-size: 1.125rem; /* text-lg equivalent */
 }
 
 .item-number {

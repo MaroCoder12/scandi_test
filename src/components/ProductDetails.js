@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Button from './Button.js';
 import { useQuery, useMutation } from '@apollo/client';
 import { GET_PRODUCT_DETAILS } from '../graphql/queries';
 import { ADD_TO_CART_MUTATION } from '../graphql/mutations.js'
 import { GET_CART_QUERY } from '../graphql/queries'
 import { useParams } from 'react-router-dom';
+import { useToast } from '../contexts/ToastContext';
 import '../styles/ProductDetails.css';
 import parse from "html-react-parser";
 
@@ -16,23 +17,18 @@ function ProductDetails() {
   });
   const [productAttributes, setAttributes] = useState(null);
   const [selectedOptions, setSelectedOptions] = useState(null);
+  const { showSuccess, showError } = useToast();
 
   const [addToCart] = useMutation(ADD_TO_CART_MUTATION, {
     refetchQueries: [{ query: GET_CART_QUERY }],
     awaitRefetchQueries: true,
     onCompleted: (data) => {
-      console.log('=== ADD TO CART SUCCESS ===');
       console.log('Product added to cart successfully:', data);
-      alert('Product added to cart!');
+      showSuccess('Product added to cart!');
     },
     onError: (error) => {
-      console.error('=== ADD TO CART ERROR ===');
       console.error('Add to cart error:', error);
-      console.error('Error message:', error.message);
-      console.error('GraphQL errors:', error.graphQLErrors);
-      console.error('Network error:', error.networkError);
-      console.error('Variables that were sent:', error.operation?.variables);
-      alert('Failed to add product to cart. Please try again.');
+      showError('Failed to add product to cart. Please try again.');
     },
     errorPolicy: 'all'
   });
@@ -57,7 +53,8 @@ function ProductDetails() {
       if (product && id) {
         const testGraphQL = async () => {
           try {
-            const response = await fetch('http://localhost:8000/graphql.php', {
+            const graphqlEndpoint = process.env.REACT_APP_GRAPHQL_ENDPOINT || 'http://localhost:8000/graphql.php';
+            const response = await fetch(graphqlEndpoint, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -83,7 +80,6 @@ function ProductDetails() {
               ]);
             }
           } catch (error) {
-            console.error('Direct GraphQL test failed:', error);
             setAttributes([
               { key: 'Color', value: ['#FF0000', '#00FF00', '#0000FF', '#000000', '#FFFFFF'] },
               { key: 'Capacity', value: ['512G', '1T'] }
@@ -110,14 +106,11 @@ function ProductDetails() {
 
   const handleAddToCart = () => {
     const productId = product?.product?.id;
-    
+
     if (!productId) {
-      console.error('Product ID is undefined or null');
       alert('Cannot add to cart: Product ID is missing');
       return;
     }
-    
-    console.log('Adding product to cart with ID:', productId);
 
     addToCart({
       variables: {

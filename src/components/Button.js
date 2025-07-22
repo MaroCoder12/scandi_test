@@ -1,5 +1,4 @@
-import React from 'react';
-import '../styles/Button.css'; // Import the CSS for styling
+import '../styles/Button.css';
 
 function Button({ text, onClick, type = 'button', className = '', disabled = false, 'data-testid': dataTestId }) {
   return (
