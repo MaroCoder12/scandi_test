@@ -133,7 +133,7 @@ function CartPopup({ isOpen, closePopup, cartItems }) {
   // Place Order Handler using dedicated endpoint
   const handlePlaceOrder = async () => {
     try {
-      const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000';
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || 'https://glidel.store';
       const response = await fetch(`${backendUrl}/place_order_endpoint.php`, {
         method: 'POST',
         headers: {

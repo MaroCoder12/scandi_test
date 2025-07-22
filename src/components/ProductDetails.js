@@ -53,7 +53,7 @@ function ProductDetails() {
       if (product && id) {
         const testGraphQL = async () => {
           try {
-            const graphqlEndpoint = process.env.REACT_APP_GRAPHQL_ENDPOINT || 'http://localhost:8000/graphql.php';
+            const graphqlEndpoint = process.env.REACT_APP_GRAPHQL_ENDPOINT || 'https://glidel.store/graphql.php';
             const response = await fetch(graphqlEndpoint, {
               method: 'POST',
               headers: {
