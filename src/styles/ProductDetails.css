@@ -149,18 +149,21 @@
 
 /* Add to Cart Button */
 .add-to-cart {
-  display: block;
-  width: 100%;
-  padding: 0.75rem;
-  font-size: 1rem;
-  font-weight: bold;
-  color: white;
-  background-color: #28a745;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  margin: 0;
-  font-family: Raleway;
+    display: block;
+    width: 100%;
+    margin-top: 1rem;
+    padding: 16px;
+    background: #5ECE7B;
+    color: #fff;
+    text-align: center;
+    border: none;
+    font-size: 0.9rem;
+    cursor: pointer;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-family: 'Raleway', sans-serif;
+    transition: background-color 0.2s ease;
 }
 
 .add-to-cart:hover {
